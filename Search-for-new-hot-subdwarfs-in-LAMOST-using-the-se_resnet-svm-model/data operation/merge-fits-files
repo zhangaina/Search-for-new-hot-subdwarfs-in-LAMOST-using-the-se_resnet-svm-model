@@ -1,0 +1,50 @@
+from astropy.io import fits
+from astropy.table import Table, vstack
+from pathlib import Path
+from tqdm import tqdm
+import numpy as np
+
+def merge_fits_files(directory, output_file):
+    tables = []
+    lens = []
+    first_file = True
+
+    # 获取目录中所有的 .fits 文件
+    fits_files = list(Path(directory).rglob('*.fits'))
+
+    # 使用 tqdm 显示进度
+    for file in tqdm(fits_files, desc='Processing files', unit='file'):
+        with fits.open(file) as hdul:
+            # 从头部信息提取 obsid
+            obsid = hdul[0].header['OBSID']
+            data = hdul[1].data
+            wavelength = data['WAVELENGTH']
+            flux = data['FLUX']
+
+            # 创建一个新的表格，包含提取的参数
+            table = Table([np.array([obsid]*len(wavelength)), wavelength, flux], names=('obsid', 'wavelength', 'flux'))
+
+            lens.append(len(wavelength[0]))
+
+            # if first_file:
+            #     merged_data = table
+            #     first_file = False
+            # else:
+            #     table_data = table
+            #     merged_data = np.concatenate((merged_data, table_data), axis=0)
+
+    print(lens)
+
+    merged_table = Table(merged_data, names=('obsid', 'wavelength', 'flux'))
+    hdu = fits.BinTableHDU(data=merged_table)
+
+    # 创建 HDU list，并写入到新的 .fits 文件
+    hdu_list = fits.HDUList([fits.PrimaryHDU(), hdu])
+    print(f'Writing merged data to {output_file}...')
+    hdu_list.writeto(output_file, overwrite=True)
+    print('Merge completed successfully.')
+
+if __name__ == '__main__':
+    directory = '/home/admin1/data/mjq/3066ex'  # 源文件夹路径
+    output_file = '/home/admin1/data/mjq/merged3066.fits'  # 输出文件路径
+    merge_fits_files(directory, output_file)

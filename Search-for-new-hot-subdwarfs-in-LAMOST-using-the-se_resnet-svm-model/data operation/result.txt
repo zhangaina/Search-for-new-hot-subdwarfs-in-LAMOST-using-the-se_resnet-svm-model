@@ -1,0 +1,39 @@
+params:
+    batch_size = 64
+    epochs = 200
+    lr = 0.1
+result:
+    测试集acc为：97.794%
+    测试集f1_score为：82.569%
+    测试集recall_score为：79.484%
+    测试集precision_score为：85.903%
+
+params:
+    batch_size = 4
+    epochs = 50
+    lr = 0.1
+result:
+    测试集acc为：98.222%
+    测试集f1_score为：86.304%
+    测试集recall_score为：86.364%
+    测试集precision_score为：86.245%
+
+params:
+    batch_size = 32
+    epochs = 100
+    lr = 0.1
+result:
+    测试集acc为：98.365%
+    测试集f1_score为：87.643%
+    测试集recall_score为：85.847%
+    测试集precision_score为：89.517%
+
+params:
+    batch_size = 32
+    epochs = 100
+    lr = 0.05
+result:
+    测试集acc为：98.187%
+    测试集f1_score为：85.754%
+    测试集recall_score为：83.699%
+    测试集precision_score为：87.914%
